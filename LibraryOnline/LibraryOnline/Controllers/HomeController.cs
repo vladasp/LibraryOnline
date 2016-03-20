@@ -8,60 +8,112 @@ namespace LibraryOnline.Controllers
 {
     public class HomeController : Controller
     {
-
-        ModelLib context;
-        List<Book> books;
+        DataClassesLibrartDataContext context = new DataClassesLibrartDataContext();
+        List<TableBooks> books;
 
         public ActionResult Index()
         {
-            if(context == null)
-            {
-                InitialData();
-            }
+            InitialData();
 
-            var query = (from book in context.Books
+            var query = (from book in context.TableBooks
                          select new
                          {
-                             ID = book.ID,
+                             ID = book.Id,
                              Author = book.Author,
                              Title = book.Title
                              //Info = book.Story,
                          }).ToList();
-
             return View(query);
+        }
+
+        public ActionResult Delete(int id)
+        {
+            try
+            {
+                TableBooks book = context.TableBooks.Where(x => x.Id == id).Single<TableBooks>();
+                context.TableBooks.DeleteOnSubmit(book);
+                context.SubmitChanges();
+            }
+            catch
+            {
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult Add(TableBooks b)
+        {
+            try
+            {
+                TableBooks book = new TableBooks
+                {
+                    Id = b.Id,
+                    Author = b.Author,
+                    Title = b.Title
+                };
+                context.TableBooks.InsertOnSubmit(book);
+                context.SubmitChanges();
+
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View(b);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult Insert(List<string>Data)
+        {
+            TableBooks book = new TableBooks();
+            try
+            {
+                int i = Convert.ToInt32(Data[0]);
+                book = context.TableBooks.Where(x => x.Id == i).Single<TableBooks>();
+                book.Id = i;
+                book.Author = Data[1];
+                book.Title = Data[2];
+                context.SubmitChanges();
+            }
+            catch
+            {
+            }
+            return RedirectToAction("Index");
         }
 
         void InitialData()
         {
-            context = new ModelLib();
-
-            context.Books.RemoveRange(context.Books);
-            context.SaveChanges();
-
-            books = context.Books.ToList();
-            books.Add(new Book
+            books = context.TableBooks.ToList();
+            books.Add(new TableBooks
             {
-                ID = 1,
+                Id = 1,
                 Author = "Dostoevsky",
                 Title = "Idiot"
             });
-            books.Add(new Book
+            books.Add(new TableBooks
             {
-                ID = 2,
+                Id = 2,
                 Author = "Chehov",
                 Title = "Palata #6"
             });
-            books.Add(new Book
+            books.Add(new TableBooks
             {
-                ID = 3,
+                Id = 3,
                 Author = "Gogol",
                 Title = "Revisor"
             });
-            foreach(Book book in books)
+            try
             {
-                context.Books.Add(book);
+                foreach (TableBooks book in books)
+                {
+                    context.TableBooks.InsertOnSubmit(book);
+                }
             }
-            context.SaveChanges();
+            catch
+            {
+
+            }
+            context.SubmitChanges();
         }
     }
 }
