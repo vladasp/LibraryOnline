@@ -17,15 +17,7 @@
 
     <div id="gridContent">
         <text style="margin: 10px">@Html.ActionLink("All books", "Index", "Home")</text>
-        @*<text style="margin: 10px">@Html.ActionLink("Available books", "Index", "Home")</text>*@
 
-        @using (Html.BeginForm("Author", "Home", FormMethod.Get))
-        {
-            <p style="margin: 10px">
-                Find by name: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
-                <input type="submit" value="Search" style="margin: 10px"/>
-            </p>
-        }
         @grid.GetHtml(
         tableStyle: "webGrid",
         headerStyle: "header",
@@ -35,9 +27,8 @@
         grid.Column("ID", "Id"),
         grid.Column("Author", "Author"),
         grid.Column("Title", "Title"),
-        grid.Column(header: " ", format: @<text>@Html.ActionLink("select", "AuthorSelect", "Home", new { author = item.Author }, null)</text>),
         grid.Column(header: " ", format: (item) => item.GetSelectLink("edit")),
-        grid.Column(header: " ", format: @<text>@Html.ActionLink( "delete", "Delete", "Home", new { id = item.ID }, null)</text>))
+        grid.Column(header: " ", format: @<text>@Html.ActionLink("delete", "Delete", "Home", new { id = item.ID }, null)</text>))
         )
         @using System.Data.Linq;
 
@@ -58,11 +49,11 @@
                 }
             }
         }
-        </div>
-        <div id="submit" style="margin: 10px">
-            @using (Html.BeginForm("Index", "Creating"))
-            {
-                <input type="submit" value="Add new book" />
-            }
-        </div>
+    </div>
+    <div id="submit" style="margin: 10px">
+        @using (Html.BeginForm("Index", "Creating"))
+        {
+            <input type="submit" value="Add new book" />
+        }
+    </div>
 </div>

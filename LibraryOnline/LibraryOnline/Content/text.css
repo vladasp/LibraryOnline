@@ -3,7 +3,7 @@
         .webGrid {
             margin: 4px;
             border-collapse: collapse;
-            width: 300px;
+            /*width: 300px;*/
             background-color: #FCFCFC;
         }
 
@@ -37,7 +37,7 @@
 
         .delete{
             margin: 4px;
-            width: 200px;
+            /*width: 200px;*/
             background-color: #FCFCFC;
         }
 

@@ -14,15 +14,14 @@ namespace LibraryOnline.Controllers
         public ActionResult Index()
         {
             InitialData();
-
             var query = (from book in context.TableBooks
-                         select new
-                         {
-                             ID = book.Id,
-                             Author = book.Author,
-                             Title = book.Title
-                             //Info = book.Story,
-                         }).ToList();
+                            select new
+                            {
+                                ID = book.Id,
+                                Author = book.Author,
+                                Title = book.Title
+                                //Info = book.Story,
+                            }).ToList();
             return View(query);
         }
 
@@ -38,28 +37,6 @@ namespace LibraryOnline.Controllers
             {
             }
             return RedirectToAction("Index");
-        }
-
-        [HttpPost]
-        public ActionResult Add(TableBooks b)
-        {
-            try
-            {
-                TableBooks book = new TableBooks
-                {
-                    Id = b.Id,
-                    Author = b.Author,
-                    Title = b.Title
-                };
-                context.TableBooks.InsertOnSubmit(book);
-                context.SubmitChanges();
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View(b);
-            }
         }
 
         [HttpPost]
@@ -115,5 +92,35 @@ namespace LibraryOnline.Controllers
             }
             context.SubmitChanges();
         }
+
+        public ActionResult Author(string SearchString)
+        {
+            var query = (from book in context.TableBooks
+                         where book.Author == SearchString
+                         select new
+                         {
+                             ID = book.Id,
+                             Author = book.Author,
+                             Title = book.Title
+                             //Info = book.Story,
+                         }).ToList();
+
+            return View(query);
+        }
+        public ActionResult AuthorSelect(string author)
+        {
+            var query = (from book in context.TableBooks
+                         where book.Author == author
+                         select new
+                         {
+                             ID = book.Id,
+                             Author = book.Author,
+                             Title = book.Title
+                             //Info = book.Story,
+                         }).ToList();
+
+            return View("Author", query);
+        }
+
     }
 }

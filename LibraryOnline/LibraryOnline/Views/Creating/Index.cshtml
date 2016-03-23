@@ -1,0 +1,17 @@
+﻿
+@{
+    ViewBag.Title = "Craeting";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Craeting new book</h2>
+        @{
+            var book = new TableBooks();
+        }
+       @using (Html.BeginForm("Add", "Creating"))
+        {
+            <b>Id       </b><br /> @Html.TextBox("Data", "Enter id") <br />
+            <b>Author   </b><br /> @Html.TextBox("Data", "Enter author") <br />
+            <b>Title    </b><br /> @Html.TextBox("Data", "Enter title") <br />
+            <input type="submit" value="Add" />
+        }
